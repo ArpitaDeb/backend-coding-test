@@ -11,9 +11,7 @@
     "start": "node index.js",
     "coverage": "nyc --check-coverage --lines 180 --per-file --reporter text npm test"
   },
-  "pre-push" : [
-    "coverage"
-  ],
+  "pre-push" : "coverage",
   "keywords": [
     "Xendit"
   ],
