@@ -6,16 +6,16 @@
   "directories": {
     "test": "tests"
   },
-  "pre-push": {
-    "run": [
-      "temp"
-    ]
-  },
   "scripts": {
     "test": "mocha tests",
     "start": "node index.js",
     "coverage": "nyc --check-coverage --lines 80 --per-file --reporter text npm test",
     "temp": "echo \"Error: I SHOULD FAIL LOLOLOLOLOL \" && exit 1"
+  },
+  "pre-push": {
+    "run": [
+      "temp"
+    ]
   },
   "author": "Bo",
   "license": "ISC",
@@ -24,6 +24,7 @@
     "coveralls": "^3.0.3",
     "eslint": "^5.16.0",
     "express": "^4.16.4",
+    "git-pre-push": "0.0.5",
     "nyc": "^14.1.0",
     "pre-push": "^0.1.1",
     "sqlite3": "^4.0.6"
