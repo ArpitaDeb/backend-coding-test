@@ -10,9 +10,9 @@
     "test": "mocha tests",
     "start": "node index.js",
     "coverage": "nyc --check-coverage --lines 80 --per-file --reporter text npm test",
-    "temp" : "echo \"Error: I SHOULD FAIL LOLOLOLOLOL \" && exit 1"
+    "temp": "echo \"Error: I SHOULD FAIL LOLOLOLOLOL \" && exit 1"
   },
-  "pre-push" : [
+  "pre-push": [
     "coverage"
   ],
   "author": "Bo",
