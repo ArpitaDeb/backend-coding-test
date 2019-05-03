@@ -14,7 +14,7 @@
     "prepush": "pre-push"
   },
   "pre-push": [
-    "prepush"
+    "temp"
   ],
   "author": "Bo",
   "license": "ISC",
