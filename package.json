@@ -13,7 +13,7 @@
     "temp": "echo \"Error: I SHOULD FAIL LOLOLOLOLOL \" && exit 1"
   },
   "pre-push": [
-    "coverage"
+    "temp"
   ],
   "author": "Bo",
   "license": "ISC",
