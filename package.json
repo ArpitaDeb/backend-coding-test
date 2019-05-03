@@ -14,7 +14,7 @@
   },
   "pre-push": {
     "run": [
-      "temp"
+      "coverage"
     ]
   },
   "author": "Bo",
