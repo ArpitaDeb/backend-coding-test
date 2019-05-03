@@ -14,7 +14,7 @@
   "scripts": {
     "test": "mocha tests",
     "start": "node index.js",
-    "coverage": "nyc --check-coverage --lines 80 --per-file --reporter text npm test"
+    "coverage": "nyc --check-coverage --lines 10 --per-file --reporter text npm test"
   },
   "author": "Bo",
   "license": "ISC",
