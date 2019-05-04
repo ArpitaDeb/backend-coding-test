@@ -46,14 +46,14 @@ module.exports = (db) => {
         if (typeof driverName !== 'string' || driverName.length < 1) {
             return res.send({
                 error_code: 'VALIDATION_ERROR',
-                message: 'Rider name must be a non empty string'
+                message: 'Driver name must be a non empty string'
             });
         }
 
         if (typeof driverVehicle !== 'string' || driverVehicle.length < 1) {
             return res.send({
                 error_code: 'VALIDATION_ERROR',
-                message: 'Rider name must be a non empty string'
+                message: 'Driver vehicle name must be a non empty string'
             });
         }
 
@@ -80,8 +80,11 @@ module.exports = (db) => {
         });
     });
 
-    app.get('/rides', (req, res) => {
-        db.all('SELECT startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle FROM Rides', function (err, rows) {
+    app.get('/rides/:offset/:limit', (req, res) => {
+        var offset = Number(req.params.offset),
+            limit = Number(req.params.limit);
+
+        db.all('SELECT startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle FROM Rides ORDER BY rideId ASC LIMIT ? OFFSET ?',[limit, offset], function (err, rows) {
             if (err) {
                 return res.send({
                     error_code: 'SERVER_ERROR',
