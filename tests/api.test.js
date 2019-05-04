@@ -31,6 +31,24 @@ describe('API tests', () => {
         });
     });
 
+    describe('GET /rides/:offset/:limit', () => {
+        it('should return empty rides in database with pagination', (done) => {
+            request(app)
+                .get('/rides/0/5')
+                .expect('Content-Type', /json/)
+                .expect(200, done);
+        });
+    });
+
+    describe('GET /rides/:offset/:limit', () => {
+        it('should return exception number parsing error in rides', (done) => {
+            request(app)
+                .get('/rides/asdsa/asdsad')
+                .expect('Content-Type', /json/)
+                .expect(200, done);
+        });
+    });
+
     describe('POST /rides', () => {
         it('check start langitude value', (done) => {
             request(app)
