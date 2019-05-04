@@ -1,187 +1,196 @@
 {
-    "swagger": "2.0",
-    "info": {
-      "version": "1.0.0",
-      "title": "Backend Engineer coding API test for Xendit",
-      "description": "All API URL to meet the criteria for backend engineer recruitment",
-      "license": {
-        "name": "MIT",
-        "url": "https://opensource.org/licenses/MIT"
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Backend Engineer coding API test for Xendit",
+    "description": "All API URL to meet the criteria for backend engineer recruitment at Xendit",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:8010",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Health",
+      "description": "All API for health url in the system"
+    },
+    {
+      "name": "Rides",
+      "description": "All API information about driver url in the system"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Check API health",
+        "tags": [
+          "Health"
+        ],
+        "description": "Check the availability API in response",
+        "responses": {
+          "200": {
+            "description": "Healthy"
+          }
+        }
       }
     },
-    "host": "localhost:8010",
-    "basePath": "/",
-    "tags": [
-      {
-        "name": "Users",
-        "description": "API for users in the system"
-      },
-      {
-        "name": "Health",
-        "description": "All API for health url in the system"
-      },
-      {
-        "name": "Rides",
-        "description": "All API for ride url in the system"
-      }
-    ],
-    "schemes": [
-      "http"
-    ],
-    "consumes": [
-      "application/json"
-    ],
-    "produces": [
-      "application/json"
-    ],
-    "paths": {
-      "/users": {
-        "post": {
-          "tags": [
-            "Users"
-          ],
-          "description": "Create new user in system",
-          "parameters": [
-            {
-              "name": "user",
-              "in": "body",
-              "description": "User that we want to create",
-              "schema": {
-                "$ref": "#/definitions/User"
-              }
-            }
-          ],
-          "produces": [
-            "application/json"
-          ],
-          "responses": {
-            "200": {
-              "description": "New user is created",
-              "schema": {
-                "$ref": "#/definitions/User"
-              }
-            }
-          }
+    "/rides/{page}/{limit}": {
+      "parameters": [{
+          "name": "page",
+          "in": "path",
+          "required": true,
+          "description": "Page of number",
+          "type": "number"
         },
-        "get": {
-          "tags": [
-            "Users"
-          ],
-          "summary": "Get all users in system",
-          "responses": {
-            "200": {
-              "description": "OK",
-              "schema": {
-                "$ref": "#/definitions/Users"
-              }
-            }
-          }
+        {
+          "name": "limit",
+          "in": "path",
+          "required": true,
+          "description": "Limit data that responds want to return",
+          "type": "number"
         }
-      },
-      "/users/{userId}": {
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "description": "ID of user that we want to find",
-            "type": "string"
-          }
+      ],
+      "get": {
+        "summary": "To request driver data with pagination",
+        "tags": [
+          "Rides"
         ],
-        "get": {
-          "tags": [
-            "Users"
-          ],
-          "summary": "Get user with given ID",
-          "responses": {
-            "200": {
-              "description": "User is found",
-              "schema": {
-                "$ref": "#/definitions/User"
-              }
-            }
-          }
-        },
-        "delete": {
-          "summary": "Delete user with given ID",
-          "tags": [
-            "Users"
-          ],
-          "responses": {
-            "200": {
-              "description": "User is deleted",
-              "schema": {
-                "$ref": "#/definitions/User"
-              }
-            }
-          }
-        },
-        "put": {
-          "summary": "Update user with give ID",
-          "tags": [
-            "Users"
-          ],
-          "parameters": [
-            {
-              "name": "user",
-              "in": "body",
-              "description": "User with new values of properties",
-              "schema": {
-                "$ref": "#/definitions/User"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "User is updated",
-              "schema": {
-                "$ref": "#/definitions/User"
-              }
+        "description": "Request driver data with pagination",
+        "responses": {
+          "200": {
+            "description": "Return a set of paginated data in Rides",
+            "schema": {
+              "$ref": "#/definitions/Rides"
             }
           }
         }
-      },
-      "/health":{
-          "get" : {
-            "summary": "Check API health",
-              "tags" : [
-                "Health"
-              ],
-              "description": "Check the availability API in response",
-              "responses": {
-                "200": {
-                  "description": "Healthy"
-                }
-              }
+      }
+    },
+    "/rides": {
+      "parameters": [{
+        "name": "ride",
+        "in": "body",
+        "description": "Driver with new values of properties",
+        "schema": {
+          "$ref": "#/definitions/RideRequest"
+        }
+      }],
+      "post": {
+        "summary": "To create driver data",
+        "tags": [
+          "Rides"
+        ],
+        "description": "Create driver data",
+        "responses": {
+          "200": {
+            "description": "Return a created driver data with Ride model",
+            "schema": {
+              "$ref": "#/definitions/RideCreatedRequest"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Ride": {
+      "properties": {
+        "startLat": {
+          "type": "number"
+        },
+        "startLong": {
+          "type": "number"
+        },
+        "endLat": {
+          "type": "number"
+        },
+        "endLong": {
+          "type": "number"
+        },
+        "riderName": {
+          "type": "string"
+        },
+        "driverName": {
+          "type": "string"
+        },
+        "driverVehicle": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string"
+        }
+      }
+    },
+    "Rides": {
+      "type": "array",
+      "$ref": "#/definitions/Ride"
+    },
+    "RideRequest": {
+      "properties": {
+          "startLat": {
+            "type": "number"
+          },
+          "startLong": {
+            "type": "number"
+          },
+          "endLat": {
+            "type": "number"
+          },
+          "endLong": {
+            "type": "number"
+          },
+          "riderName": {
+            "type": "string"
+          },
+          "driverName": {
+            "type": "string"
+          },
+          "driverVehicle": {
+            "type": "string"
           }
       }
     },
-    "definitions": {
-      "User": {
-        "required": [
-          "email",
-          "_id"
-        ],
-        "properties": {
-          "_id": {
-            "type": "string",
-            "uniqueItems": true
+    "RideCreatedRequest": {
+      "properties": {
+          "rideId" : {
+            "type": "number"
           },
-          "email": {
-            "type": "string",
-            "uniqueItems": true
+          "startLat": {
+            "type": "number"
           },
-          "lastName": {
+          "startLong": {
+            "type": "number"
+          },
+          "endLat": {
+            "type": "number"
+          },
+          "endLong": {
+            "type": "number"
+          },
+          "riderName": {
             "type": "string"
           },
-          "firstName": {
+          "driverName": {
+            "type": "string"
+          },
+          "driverVehicle": {
+            "type": "string"
+          },
+          "created" : {
             "type": "string"
           }
-        }
-      },
-      "Users": {
-        "type": "array",
-        "$ref": "#/definitions/User"
       }
     }
   }
+}
