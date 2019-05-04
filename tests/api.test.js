@@ -30,4 +30,33 @@ describe('API tests', () => {
                 .expect(200, done);
         });
     });
+
+    describe('POST /rides', () => {
+        it('check whether driver vehicle is empty string', (done) => {
+            request(app)
+                .post('/rides')
+                .send({"start_lat" : 90, "start_long" : 90, "end_lat" : 90, "end_long" : 90, "rider_name" : "test name", "driver_name" : "test drive", "driver_vehicle" : ""})
+                .expect('Content-Type', /json/)
+                .expect(200, done);
+        });
+    });
+
+    describe('POST /rides', () => {
+        it('should add a new rides in database', (done) => {
+            request(app)
+                .post('/rides')
+                .send({"start_lat" : 90, "start_long" : 90, "end_lat" : 90, "end_long" : 90, "rider_name" : "test name", "driver_name" : "test drive", "driver_vehicle" : "Motornya driver"})
+                .expect('Content-Type', /json/)
+                .expect(200, done);
+        });
+    });
+
+    describe('GET /rides', () => {
+        it('should return all the rides in database', (done) => {
+            request(app)
+                .get('/rides')
+                .expect('Content-Type', /json/)
+                .expect(200, done);
+        });
+    });
 });
