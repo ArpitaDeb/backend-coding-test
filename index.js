@@ -1,11 +1,9 @@
 'use strict';
 
 const express = require('express');
+// eslint-disable-next-line no-unused-vars
 const app = express();
 const port = 8010;
-
-const bodyParser = require('body-parser');
-const jsonParser = bodyParser.json();
 
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database(':memory:');
@@ -17,5 +15,6 @@ db.serialize(() => {
 
     const app = require('./src/app')(db);
 
+    // eslint-disable-next-line no-console
     app.listen(port, () => console.log(`App started and listening on port ${port}`));
 });

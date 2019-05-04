@@ -8,16 +8,18 @@
   },
   "scripts": {
     "test": "mocha tests",
-    "start": "node index.js"
+    "start": "node index.js",
+    "coverage": "nyc --check-coverage --lines 80 --per-file --reporter text npm test",
+    "eslint": "eslint src/*.js"
   },
-  "keywords": [
-    "Xendit"
-  ],
   "author": "Bo",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "coveralls": "^3.0.3",
+    "eslint": "^5.16.0",
     "express": "^4.16.4",
+    "nyc": "^14.1.0",
     "sqlite3": "^4.0.6",
     "swagger-ui-express": "^4.0.2"
   },
