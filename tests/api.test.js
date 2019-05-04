@@ -32,6 +32,46 @@ describe('API tests', () => {
     });
 
     describe('POST /rides', () => {
+        it('check start langitude value', (done) => {
+            request(app)
+                .post('/rides')
+                .send({"start_lat" : -90, "start_long" : 270, "end_lat" : 90, "end_long" : 90, "rider_name" : "", "driver_name" : "driver name", "driver_vehicle" : "driver vehicle"})
+                .expect('Content-Type', /json/)
+                .expect(200, done);
+        });
+    });
+
+    describe('POST /rides', () => {
+        it('check end latitude value', (done) => {
+            request(app)
+                .post('/rides')
+                .send({"start_lat" : 90, "start_long" : 90, "end_lat" : -90, "end_long" : 270, "rider_name" : "", "driver_name" : "driver name", "driver_vehicle" : "driver vehicle"})
+                .expect('Content-Type', /json/)
+                .expect(200, done);
+        });
+    });
+
+    describe('POST /rides', () => {
+        it('check whether rider name is empty string', (done) => {
+            request(app)
+                .post('/rides')
+                .send({"start_lat" : 90, "start_long" : 90, "end_lat" : 90, "end_long" : 90, "rider_name" : "", "driver_name" : "driver name", "driver_vehicle" : "driver vehicle"})
+                .expect('Content-Type', /json/)
+                .expect(200, done);
+        });
+    });
+
+    describe('POST /rides', () => {
+        it('check whether driver name is empty string', (done) => {
+            request(app)
+                .post('/rides')
+                .send({"start_lat" : 90, "start_long" : 90, "end_lat" : 90, "end_long" : 90, "rider_name" : "test name", "driver_name" : "", "driver_vehicle" : "driver vehicle"})
+                .expect('Content-Type', /json/)
+                .expect(200, done);
+        });
+    });
+
+    describe('POST /rides', () => {
         it('check whether driver vehicle is empty string', (done) => {
             request(app)
                 .post('/rides')
@@ -51,10 +91,10 @@ describe('API tests', () => {
         });
     });
 
-    describe('GET /rides', () => {
-        it('should return all the rides in database', (done) => {
+    describe('GET /rides/:offset/:limit', () => {
+        it('should return all the rides in database with pagination', (done) => {
             request(app)
-                .get('/rides')
+                .get('/rides/0/5')
                 .expect('Content-Type', /json/)
                 .expect(200, done);
         });
