@@ -14,7 +14,7 @@
     "try-to-push": "echo \"Error: I SHOULD FAIL LOLOLOLOLOL \" && exit 1"
   },
   "pre-push": [
-    "try-to-push"
+    "coverage"
   ],
   "author": "Bo",
   "license": "ISC",
