@@ -3,7 +3,8 @@
 const express = require('express');
 // eslint-disable-next-line no-unused-vars
 const app = express();
-const port = 8010;
+// eslint-disable-next-line no-undef
+const port = process.env.PORT || 8010;
 
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database(':memory:');
