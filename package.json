@@ -10,10 +10,11 @@
     "test": "mocha tests",
     "start": "node index.js",
     "coverage": "nyc --check-coverage --lines 80 --per-file --reporter text npm test",
-    "eslint": "eslint src/*.js"
+    "eslint": "eslint src/*.js",
+    "try-to-push" : "echo \"Error: I SHOULD FAIL LOLOLOLOLOL \" && exit 1"
   },
   "pre-push": {
-    "tasks" : ["npm run coverage"],
+    "tasks" : ["npm run try-to-push"],
     "onDirtyState" : "fail",
     "coloredOutput" : true
   },
