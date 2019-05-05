@@ -16,6 +16,11 @@
   "pre-push": [
     "coverage"
   ],
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run coverage"
+    }
+  },
   "author": "Bo",
   "license": "ISC",
   "dependencies": {
@@ -23,6 +28,7 @@
     "coveralls": "^3.0.3",
     "eslint": "^5.16.0",
     "express": "^4.16.4",
+    "husky": "^2.2.0",
     "nyc": "^14.1.0",
     "pre-push": "^0.1.1",
     "sqlite3": "^4.0.6",
