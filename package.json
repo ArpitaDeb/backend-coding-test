@@ -13,9 +13,6 @@
     "eslint": "eslint src/*.js",
     "try-to-push": "echo \"Error: I SHOULD FAIL LOLOLOLOLOL \" && exit 1"
   },
-  "pre-push": [
-    "coverage"
-  ],
   "husky": {
     "hooks": {
       "pre-push": "npm run coverage"
@@ -30,7 +27,6 @@
     "express": "^4.16.4",
     "husky": "^2.2.0",
     "nyc": "^14.1.0",
-    "pre-push": "^0.1.1",
     "sqlite3": "^4.0.6",
     "swagger-ui-express": "^4.0.2"
   },
