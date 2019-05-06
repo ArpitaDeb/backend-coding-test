@@ -9,9 +9,10 @@
   "scripts": {
     "test": "mocha tests",
     "start": "node index.js",
-    "coverage": "nyc --check-coverage --lines 80 --per-file --reporter text npm test",
+    "coverage": "nyc --check-coverage --lines 80 --statement 80 --branch --80 --per-file --reporter text npm test",
     "eslint": "eslint src/*.js",
-    "try-to-push": "echo \"Error: I SHOULD FAIL LOLOLOLOLOL \" && exit 1"
+    "try-to-push": "echo \"Error: I SHOULD FAIL LOLOLOLOLOL \" && exit 1",
+    "tsc": "tsc"
   },
   "husky": {
     "hooks": {
@@ -28,9 +29,12 @@
     "husky": "^2.2.0",
     "nyc": "^14.1.0",
     "sqlite3": "^4.0.6",
-    "swagger-ui-express": "^4.0.2"
+    "swagger-ui-express": "^4.0.2",
+    "typescript": "^3.4.5"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^1.7.0",
+    "@typescript-eslint/parser": "^1.7.0",
     "mocha": "^6.1.4",
     "supertest": "^4.0.2"
   }
