@@ -2,6 +2,7 @@
 const VALIDATION_ERROR = 'VALIDATION_ERROR';
 const SERVER_ERROR = 'SERVER_ERROR';
 const SUCCESS = 'SUCCESS';
+const RIDES_ERROR = 'RIDES_NOT_FOUND_ERROR';
 
 function validateRidesInput(values){
     if (values.startLatitude < -90 || values.startLatitude > 90 || values.startLongitude < -180 || values.startLongitude > 180) {
@@ -49,5 +50,6 @@ module.exports = {
     validateRidesInput: validateRidesInput,
     VALIDATION_ERROR: VALIDATION_ERROR,
     SUCCESS: SUCCESS,
-    SERVER_ERROR: SERVER_ERROR
+    SERVER_ERROR: SERVER_ERROR,
+    RIDES_ERROR: RIDES_ERROR
 }

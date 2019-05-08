@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable @typescript-eslint/no-var-requires */
 'use strict';
@@ -12,6 +13,7 @@ const swaggerUI = require('swagger-ui-express'),
     swaggerDocument = require('../swagger.json');
 
 const library = require('./library');
+const repository = require('./repository');
 const Promise = require('bluebird');
 
 
@@ -42,24 +44,17 @@ module.exports = (db) => {
 
             if(validation.error_code == library.SUCCESS){
                 let values = [ridesRequest.startLatitude, ridesRequest.startLongitude, ridesRequest.endLatitude, ridesRequest.endLongitude, ridesRequest.riderName, ridesRequest.driverName, ridesRequest.driverVehicle];
-                let results = await new Promise(function(resolve, reject){
-                    db.run('INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)', values, function (err) {
-                        if (err) {
-                            reject({
-                                error_code: library.SERVER_ERROR,
-                                message: 'Unknown error'
-                            });
-                        }
-                        resolve({lastID: this.lastID});        
-                    });
+                let results = await new repository(db).insertRides(values).then((data) => {
+                    return new repository(db).selectRidesById(data.lastID);
+                }).catch((err) => {
+                    res.status(500).send(err);
                 });
-                
-                res.send(results);
+                res.status(200).send(results);
             }else{
-                res.send(validation);
+                res.status(403).send(validation);
             }
         }catch(e){
-            return res.send({
+            return res.status(500).send({
                 error_code: library.SERVER_ERROR,
                 message: e.message
             });
@@ -71,25 +66,13 @@ module.exports = (db) => {
             let offset = Number(req.params.offset);
             let limit = Number(req.params.limit);
 
-            await db.all('SELECT startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle FROM Rides ORDER BY rideId ASC LIMIT ? OFFSET ?', [limit, offset], function (err, rows) {
-                if (err) {
-                    return res.send({
-                        error_code: 'SERVER_ERROR',
-                        message: 'Unknown error'
-                    });
-                }
-
-                if (rows.length === 0) {
-                    return res.send({
-                        error_code: 'RIDES_NOT_FOUND_ERROR',
-                        message: 'Could not find any rides'
-                    });
-                }
-
-                return res.send(rows);
+            let results = await new repository(db).selectRidesPagination(offset, limit).catch((err) => {
+                res.status(500).send(err);
             });
+
+            res.status(200).send(results);
         }catch(e){
-            res.send({
+            res.status(500).send({
                 error_code: library.SERVER_ERROR,
                 message: e.message
             });

@@ -5,41 +5,66 @@
 /* eslint-disable @typescript-eslint/camelcase */
 const library = require('./library');
 
-const promisify = require('util');
-
 class DataRepository{
     
-    constructor(dbPath){
-        this.db = dbPath;   
+    constructor(db){
+        this.db = db;   
     }
 
     insertRides(values) {
-        this.db.run('INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)', values, function (err) {
-            if (err) {
-                return {
-                    error_code: library.SERVER_ERROR,
-                    message: 'Unknown error'
-                };
-            }
-
-            return {lastID: this.lastID};
+        const connection = this.db;
+        return new Promise(function(resolve, reject){
+            connection.run('INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)', values, function (err) {
+                if (err) {
+                    reject({
+                        error_code: library.SERVER_ERROR,
+                        message: 'Unknown error'
+                    });
+                }
+                resolve({lastID: this.lastID});        
+            });
         });
     }
 
     selectRidesById(id){
-        this.db.all('SELECT * FROM Rides WHERE rideID = ?', id, function (err, rows) {
-            if (err) {
-                return {
-                    error_code: library.SERVER_ERROR,
-                    message: 'Unknown error'
-                };
-            }
-
-            return rows;
+        const connection = this.db;
+        return new Promise(function(resolve, reject){
+            connection.all('SELECT * FROM Rides WHERE rideID = ?', id, function (err, rows) {
+                if (err) {
+                    reject({
+                        error_code: library.SERVER_ERROR,
+                        message: 'Unknown error'
+                    });
+                }
+    
+                return resolve(rows);
+            });
         });
+    }
+
+    selectRidesPagination(offset, limit){
+        const connection = this.db;
+        return new Promise(function(resolve, reject){
+            connection.all('SELECT startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle FROM Rides ORDER BY rideId ASC LIMIT ? OFFSET ?', [limit, offset], function (err, rows) {
+                if (err) {
+                    reject({
+                        error_code: library.SERVER_ERROR,
+                        message: 'Unknown error'
+                    });
+                }
+    
+                if (rows.length === 0) {
+                    reject({
+                        error_code: library.RIDES_ERROR,
+                        message: 'Could not find any rides'
+                    });
+                }
+    
+                resolve(rows);
+            });
+        });
+        
     }
 }
 
-module.exports = (db) =>  {
-    DataRepository: DataRepository(db)
-}
+module.exports =  DataRepository;
