@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable no-undef */
 'use strict';
 
@@ -7,6 +8,7 @@ const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database(':memory:');
 
 const app = require('../src/app')(db);
+const repo = require('../src/repository');
 const buildSchemas = require('../src/schemas');
 
 describe('API tests', () => {
@@ -22,6 +24,13 @@ describe('API tests', () => {
         });
     });
 
+    /**
+     * Unit testing
+     */
+
+    /**
+     * Integration test
+     */
     describe('GET /health', () => {
         it('should return health', (done) => {
             request(app)

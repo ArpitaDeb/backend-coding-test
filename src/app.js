@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable @typescript-eslint/no-var-requires */
 'use strict';
@@ -10,6 +11,10 @@ const jsonParser = bodyParser.json();
 
 const swaggerUI = require('swagger-ui-express'),
     swaggerDocument = require('../swagger.json');
+
+const library = require('./library');
+const repository = require('./repository');
+const Promise = require('bluebird');
 
 
 module.exports = (db) => {
@@ -25,96 +30,51 @@ module.exports = (db) => {
             const driverName = req.body.driver_name;
             const driverVehicle = req.body.driver_vehicle;
 
-            if (startLatitude < -90 || startLatitude > 90 || startLongitude < -180 || startLongitude > 180) {
-                return res.send({
-                    error_code: 'VALIDATION_ERROR',
-                    message: 'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively'
+            let ridesRequest = {
+                startLatitude : startLatitude, 
+                startLongitude : startLongitude, 
+                endLatitude : endLatitude, 
+                endLongitude : endLongitude, 
+                driverName : driverName, 
+                riderName : riderName, 
+                driverVehicle : driverVehicle
+            };
+
+            let validation = library.validateRidesInput(ridesRequest);
+
+            if(validation.error_code == library.SUCCESS){
+                let values = [ridesRequest.startLatitude, ridesRequest.startLongitude, ridesRequest.endLatitude, ridesRequest.endLongitude, ridesRequest.riderName, ridesRequest.driverName, ridesRequest.driverVehicle];
+                let results = await new repository(db).insertRides(values).then((data) => {
+                    return new repository(db).selectRidesById(data.lastID);
+                }).catch((err) => {
+                    res.status(500).send(err);
                 });
+                res.status(200).send(results);
+            }else{
+                res.status(403).send(validation);
             }
-
-            if (endLatitude < -90 || endLatitude > 90 || endLongitude < -180 || endLongitude > 180) {
-                return res.send({
-                    error_code: 'VALIDATION_ERROR',
-                    message: 'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively'
-                });
-            }
-
-            if (typeof riderName !== 'string' || riderName.length < 1) {
-                return res.send({
-                    error_code: 'VALIDATION_ERROR',
-                    message: 'Rider name must be a non empty string'
-                });
-            }
-
-            if (typeof driverName !== 'string' || driverName.length < 1) {
-                return res.send({
-                    error_code: 'VALIDATION_ERROR',
-                    message: 'Driver name must be a non empty string'
-                });
-            }
-
-            if (typeof driverVehicle !== 'string' || driverVehicle.length < 1) {
-                return res.send({
-                    error_code: 'VALIDATION_ERROR',
-                    message: 'Driver vehicle name must be a non empty string'
-                });
-            }
-
-            var values = [req.body.start_lat, req.body.start_long, req.body.end_lat, req.body.end_long, req.body.rider_name, req.body.driver_name, req.body.driver_vehicle];
-
-            await db.run('INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)', values, function (err) {
-                if (err) {
-                    return res.send({
-                        error_code: 'SERVER_ERROR',
-                        message: 'Unknown error'
-                    });
-                }
-
-                db.all('SELECT * FROM Rides WHERE rideID = ?', this.lastID, function (err, rows) {
-                    if (err) {
-                        return res.send({
-                            error_code: 'SERVER_ERROR',
-                            message: 'Unknown error'
-                        });
-                    }
-
-                    res.send(rows);
-                });
-            });
         }catch(e){
-            return res.send({
-                error_code: 'SERVER_ERROR',
-                message: e
+            return res.status(500).send({
+                error_code: library.SERVER_ERROR,
+                message: e.message
             });
         }        
     });
 
     app.get('/rides/:offset/:limit', async (req, res) => {
         try{
-            var offset = Number(req.params.offset),
-                limit = Number(req.params.limit);
+            let offset = Number(req.params.offset);
+            let limit = Number(req.params.limit);
 
-            await db.all('SELECT startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle FROM Rides ORDER BY rideId ASC LIMIT ? OFFSET ?', [limit, offset], function (err, rows) {
-                if (err) {
-                    return res.send({
-                        error_code: 'SERVER_ERROR',
-                        message: 'Unknown error'
-                    });
-                }
-
-                if (rows.length === 0) {
-                    return res.send({
-                        error_code: 'RIDES_NOT_FOUND_ERROR',
-                        message: 'Could not find any rides'
-                    });
-                }
-
-                return res.send(rows);
+            let results = await new repository(db).selectRidesPagination(offset, limit).catch((err) => {
+                res.status(500).send(err);
             });
+
+            res.status(200).send(results);
         }catch(e){
-            res.send({
-                error_code: 'SERVER_ERROR',
-                message: e
+            res.status(500).send({
+                error_code: library.SERVER_ERROR,
+                message: e.message
             });
         }
     });
