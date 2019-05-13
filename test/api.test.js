@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable no-undef */
 'use strict';
 
@@ -21,7 +22,7 @@ describe('API tests', () => {
             done();
         });
     });
-
+    
     describe('GET /health', () => {
         it('should return health', (done) => {
             request(app)
