@@ -21,7 +21,7 @@ class DataRepository{
                         message: 'Unknown error'
                     });
                 }
-                resolve({lastID: this.lastID});        
+                resolve({error_code: library.SUCCESS, message: 'success', data: this.lastID});        
             });
         });
     }
@@ -37,7 +37,7 @@ class DataRepository{
                     });
                 }
     
-                return resolve(rows);
+                return resolve({error_code: library.SUCCESS, message: 'success', data: rows});
             });
         });
     }
@@ -60,7 +60,7 @@ class DataRepository{
                     });
                 }
     
-                resolve(rows);
+                return resolve({error_code: library.SUCCESS, message: 'success', data: rows});
             });
         });
         
