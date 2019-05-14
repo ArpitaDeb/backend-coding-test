@@ -14,7 +14,6 @@ const swaggerUI = require('swagger-ui-express'),
 
 const library = require('./library');
 const repository = require('./repository');
-const Promise = require('bluebird');
 
 
 module.exports = (db) => {
@@ -45,7 +44,7 @@ module.exports = (db) => {
             if(validation.error_code == library.SUCCESS){
                 let values = [ridesRequest.startLatitude, ridesRequest.startLongitude, ridesRequest.endLatitude, ridesRequest.endLongitude, ridesRequest.riderName, ridesRequest.driverName, ridesRequest.driverVehicle];
                 let results = await new repository(db).insertRides(values).then((data) => {
-                    return new repository(db).selectRidesById(data.lastID);
+                    return new repository(db).selectRidesById(data.data);
                 }).catch((err) => {
                     res.status(500).send(err);
                 });
